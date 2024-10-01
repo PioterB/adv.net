@@ -22,5 +22,10 @@ namespace LevelUpCSharp.Products
         public DateTimeOffset ExpirationDate => _expirationDate;
 
         public int IngredientsCount => _ingredients.Length;
+
+        public static implicit operator Result<Sandwich>(Sandwich source)
+		{
+            return Result<Sandwich>.Success(source);
+		}
     }
 }

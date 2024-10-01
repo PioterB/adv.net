@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using LevelUpCSharp.Helpers;
 using LevelUpCSharp.Products;
+using LevelUpCSharp.Tax;
 
 namespace LevelUpCSharp.Retail
 {
@@ -32,7 +33,7 @@ namespace LevelUpCSharp.Retail
                 return Result<Sandwich>.Failed();
             }
 
-            var sandwich = _lines[kind][0];
+             var sandwich = _lines[kind][0];
             _lines[kind].RemoveAt(0);
             OnPurchase(DateTimeOffset.Now, sandwich);
             return Result<Sandwich>.Success(sandwich);

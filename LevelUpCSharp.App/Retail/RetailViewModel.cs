@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using LevelUpCSharp.Helpers;
+using LevelUpCSharp.Collections;
 using LevelUpCSharp.Products;
 
 namespace LevelUpCSharp.Retail
@@ -42,10 +43,14 @@ namespace LevelUpCSharp.Retail
 
         private void OnPacked(PackingSummary summary)
         {
+            /*
             foreach (var summaryPosition in summary.Positions)
             {
                 _lines[summaryPosition.Kind].TopUp(summaryPosition.Added);
             }
+            */
+
+            summary.Positions.SafeForEach(summaryPosition => _lines[summaryPosition.Kind].TopUp(summaryPosition.Added));
 
             /* add total number of added items to log statement */
             Logs.Add($"{summary.TimeStamp} topped up, {summary.Vendor}.");

@@ -20,7 +20,7 @@ namespace LevelUpCSharp.Linq.Counters
 		{
 			_numbers.ToArray();
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(100, NumbersIterator.MoveNextCounter);
 		}
 
 		[TestMethod]
@@ -28,7 +28,7 @@ namespace LevelUpCSharp.Linq.Counters
 		{
 			var _= _numbers.Cast<object>();
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(0, NumbersIterator.MoveNextCounter);
 		}
 
 		[TestMethod]
@@ -36,7 +36,7 @@ namespace LevelUpCSharp.Linq.Counters
 		{
 			var _ =_numbers.Cast<object>().ToArray();
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(100, NumbersIterator.MoveNextCounter);
 		}
 
 		[TestMethod]
@@ -44,7 +44,7 @@ namespace LevelUpCSharp.Linq.Counters
 		{
             var _ = _numbers.Where(x => x > 10);
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(0, NumbersIterator.MoveNextCounter);
 		}
 
 		[TestMethod]
@@ -52,7 +52,7 @@ namespace LevelUpCSharp.Linq.Counters
 		{
             var _ = _numbers.First(x => x == 10);
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(11, NumbersIterator.MoveNextCounter);
 		}
 
 		[TestMethod]
@@ -60,7 +60,7 @@ namespace LevelUpCSharp.Linq.Counters
 		{
             var _ = _numbers.Single(x => x == 10);
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(100, NumbersIterator.MoveNextCounter);
 		}
 
 		[TestMethod]
@@ -68,23 +68,29 @@ namespace LevelUpCSharp.Linq.Counters
 		{
             var _ = _numbers.Where(x => x == 10).First();
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(11, NumbersIterator.MoveNextCounter);
 		}
 
 		[TestMethod]
 		public void WhereGreatenThenTen_WhereGreaterThenTwenty_First()
 		{
-            var _ = _numbers.Where(x => x > 10).Where(x => x > 20).First();
+            var _ = _numbers
+				.Where(x => x > 10)
+				.Where(x => x > 20)
+				.First();
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(22, NumbersIterator.MoveNextCounter);
 		}
 
 		[TestMethod]
 		public void WhereGreatenThenTwenty_WhereGreaterThenTen_First()
 		{
-            var _ = _numbers.Where(x => x > 20).Where(x => x > 10).First();
+            var _ = _numbers
+				.Where(x => x > 20)
+				.Where(x => x > 10)
+				.First();
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(22, NumbersIterator.MoveNextCounter);
 		}
 
 
@@ -95,7 +101,7 @@ namespace LevelUpCSharp.Linq.Counters
                 .Where(x => x < 50)
                 .Count();
 
-			Assert.AreEqual(/*??*/ -1, NumbersIterator.MoveNextCounter);
+			Assert.AreEqual(100, NumbersIterator.MoveNextCounter);
 		}
 	}
 }

@@ -19,15 +19,8 @@ namespace LevelUpCSharp.Linq.Queries
 
 
 			// act, get the intersection set of allCompaniesFromSourceA and allCompaniesFromSourceB depending on the name
-			List<Company> intersectionSet = new List<Company>();
-			foreach (Company p in allCompaniesFromSourceA)
-			{
-				if (allCompaniesFromSourceB.Contains(p, new MyCompanyComparer()))
-				{
-					intersectionSet.Add(p);
-				}
-			}
-			Assert.Fail("build the intersection set using Linq");
+			var intersectionSet = allCompaniesFromSourceA
+				.Intersect(allCompaniesFromSourceB, new MyCompanyComparer());
 
 			// assert
 			foreach (var item in intersectionSet)

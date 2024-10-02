@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using LevelUpCSharp.Collections;
 using LevelUpCSharp.Helpers;
 using LevelUpCSharp.Products;
 using LevelUpCSharp.Tax;
@@ -43,30 +45,25 @@ namespace LevelUpCSharp.Retail
 
         public void Pack(IEnumerable<Sandwich> package, string deliver)
         {
-            /* use linq to create summary, see constructor for expectations */
-
-            Dictionary<SandwichKind, int> sums = new Dictionary<SandwichKind, int>();
-            foreach (var sandwich in package)
-            {
-                _lines[sandwich.Kind].Add(sandwich);
-
-                if (sums.ContainsKey(sandwich.Kind) == false)
-                {
-                    sums.Add(sandwich.Kind, 0);
-                }
-
-                sums[sandwich.Kind]++;
-            }
-
-            var summaryPositions = new List<LineSummary>();
-
-            foreach (var pair in sums)
-            {
-                summaryPositions.Add(new LineSummary(pair.Key, pair.Value));
-            }
-
-            var summary = new PackingSummary(summaryPositions, deliver);
+            PopulateRack(package);
+            var summary = ComputeReport(package, deliver);
             OnPacked(summary);
+        }
+
+        private void PopulateRack(IEnumerable<Sandwich> package)
+        {
+            package.ForEach(sandwitch => _lines[sandwitch.Kind].Add(sandwitch));
+        }
+
+        private static PackingSummary ComputeReport(IEnumerable<Sandwich> package, string deliver)
+        {
+            var summaryPositions = package
+                .GroupBy(
+                    p => p.Kind,
+                    (kind, sandwiches) => new LineSummary(kind, sandwiches.Count()))
+                .ToArray();
+            var summary = new PackingSummary(summaryPositions, deliver);
+            return summary;
         }
 
         protected virtual void OnPacked(PackingSummary summary)

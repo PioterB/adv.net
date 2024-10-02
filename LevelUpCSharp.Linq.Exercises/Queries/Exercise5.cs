@@ -18,17 +18,7 @@ namespace LevelUpCSharp.Linq.Queries
 			Company[] companiesFromB = new Numbers(10).Select(x => new Company()).ToArray();
 
 
-			// act, create a list of all available companies
-			List<Company> allCompanies = new List<Company>();
-			foreach (Company c in companiesFromA)
-			{
-				allCompanies.Add(c);
-			}
-			foreach (Company c in companiesFromB)
-			{
-				allCompanies.Add(c);
-			}
-			Assert.Fail("create a list of all available companies using linq");
+			List<Company> allCompanies = companiesFromB.Concat(companiesFromA).ToList();
 
 			// assert
 			Assert.AreEqual(20, allCompanies.Count());

@@ -23,16 +23,7 @@ namespace LevelUpCSharp.Linq.Queries
 				}
 			}
 
-			// act, create a list of all available employees using one single query
-			List<Employee> employees=new List<Employee>();
-			foreach (Company c in allCompanies)
-			{
-				foreach (Employee e in c.Employees)
-				{
-					employees.Add(e);
-				}
-			}
-			Assert.Fail("create a list of all available employees using one single query");
+			List<Employee> employees = allCompanies.SelectMany(c => c.Employees).ToList();
 
 			// assert
 			Assert.AreEqual(10*5, employees.Count());

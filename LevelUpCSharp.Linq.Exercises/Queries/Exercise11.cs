@@ -26,13 +26,15 @@ namespace LevelUpCSharp.Linq.Queries
 
 
 			// act, create a dictionary where the company is the key, and the employees are the value (with a reference back to the company)
-			Dictionary<Company, EmployeesCollection> results = new Dictionary<Company, EmployeesCollection>();
-			foreach (Company c in allCompanies)
-			{
-				results.Add(c, new EmployeesCollection(c.Employees.ToList(), c));
-			}
-
-			Assert.Fail("Generate the dictionary with using Linq and without a internal class");
+			var results =
+				allCompanies.ToDictionary(
+					x => x,
+					x => new
+					{
+						x.Employees,
+						Company = x,
+					},
+					new MyCompanyComparer());
 
 			// assert
 			foreach (var item in results)

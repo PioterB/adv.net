@@ -27,32 +27,31 @@ namespace LevelUpCSharp.Linq.Queries
 			// act, group the employees from the companies in important employees (salear > 2500)
 			// and not so important employees(salear <= 2500)
 			// for each group the min and the max salear should be retrieved
-			List<Employee> importantEmployees = new List<Employee>();
-			List<Employee> notImportantEmployees = new List<Employee>();
-			int minSalearImportant = int.MaxValue;
-			int minSalearNotImportant = int.MaxValue;
-			int maxSalearImportant = int.MinValue;
-			int maxSalearNotImportant = int.MinValue;
-			foreach (Company c in allCompanies)
-			{
-				foreach (Employee e in c.Employees)
-					if (e.Salear <= 2500)
-					{
-						notImportantEmployees.Add(e);
-						minSalearNotImportant = Math.Min(minSalearNotImportant, e.Salear);
-						maxSalearNotImportant = Math.Max(maxSalearNotImportant, e.Salear);
-					}
-					else
-					{
-						importantEmployees.Add(e);
-						minSalearImportant = Math.Min(minSalearImportant, e.Salear);
-						maxSalearImportant = Math.Max(maxSalearImportant, e.Salear);
-					}
-			}
+			var result = allCompanies
+				.SelectMany(x => x.Employees)
+				.GroupBy(
+					x =>
+						x.Salear <= 2500,
+					(important, employees) =>
+						new
+						{
+							IsImporant = !important,
+							Employees = employees,
+							MaxSalear = employees.Max(x => x.Salear),
+							MinSalear = employees.Min(x => x.Salear),
+						})
+				.OrderBy(x => x.IsImporant)
+				.ToArray();
+
+			int minSalearImportant = result[1].MinSalear;
+			int minSalearNotImportant = result[0].MinSalear;
+			int maxSalearImportant = result[1].MaxSalear;
+			int maxSalearNotImportant = result[0].MaxSalear;
+			var notImportantEmployees = result[0].Employees.ToList();
+			var importantEmployees = result[1].Employees.ToList();
 
 
 			// assert
-			Assert.Fail("group the data via linq");
 			Assert.IsFalse(notImportantEmployees.Exists(x => x.Salear > 2500));
 			Assert.AreEqual(notImportantEmployees.Max(x => x.Salear), maxSalearNotImportant);
 			Assert.AreEqual(notImportantEmployees.Min(x => x.Salear), minSalearNotImportant);

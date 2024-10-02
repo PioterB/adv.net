@@ -18,18 +18,8 @@ namespace LevelUpCSharp.Linq.Queries
 
 
 			// act, compare the elements in the given list based on the company name
-			allCompaniesFromSourceA = allCompaniesFromSourceA.OrderBy(x => x.Name).ToArray();
-			allCompaniesFromSourceB = allCompaniesFromSourceB.OrderBy(x => x.Name).ToArray();
-			bool areEqual = true;
-			areEqual &= allCompaniesFromSourceA.Length == allCompaniesFromSourceB.Length;
-			if (areEqual)
-			{
-				for (int i = 0; i < allCompaniesFromSourceA.Length; i++)
-				{
-					areEqual &= allCompaniesFromSourceA[i].Name == allCompaniesFromSourceB[i].Name;
-				}
-			}
-			Assert.Fail("compare the lists using linq");
+			bool areEqual = allCompaniesFromSourceB.OrderBy(c => c.Name)
+				.SequenceEqual(allCompaniesFromSourceA.OrderBy(c => c.Name), new MyCompanyComparer());
 
 			// assert
 			Assert.IsTrue(areEqual);

@@ -19,7 +19,7 @@ namespace LevelUpCSharp.Linq.Queries
 
 
 			// act, detect if the given company already exists depending on its name
-			bool containsComapany = allCompanies.Contains(c1);
+			bool containsComapany = allCompanies.Any(c => c.Name.Equals(c1.Name));
 
 			// assert
 			Assert.IsTrue(containsComapany);
@@ -34,7 +34,7 @@ namespace LevelUpCSharp.Linq.Queries
 			Company lastCompany = allCompanies[0];
 
 			// act, order all companies by their name
-			allCompanies.Sort();
+			allCompanies = allCompanies.OrderBy(c => c.Name).ToList();
 
 			// assert
 			Assert.AreEqual(lastCompany, allCompanies.Last());
@@ -57,7 +57,10 @@ namespace LevelUpCSharp.Linq.Queries
 					};
 
 			// act, return a list of distinct companies (key is the company name) 
-			IEnumerable<Company> filteredCompanies = allCompanies.Distinct();
+			IEnumerable<Company> filteredCompanies = allCompanies
+				.GroupBy(c => c.Name)
+				.Select(c => c.First())
+				.ToArray();
 
 			// assert
 			Assert.AreEqual(3, filteredCompanies.Count());
@@ -72,16 +75,15 @@ namespace LevelUpCSharp.Linq.Queries
 			Company lastCompany = allCompanies[1];
 
 			// act, order all companies by their name and remember the old index from the list
-			Dictionary<Company, int> oldIndexByCompany = new Dictionary<Company, int>();
-			for (int i = 0; i < allCompanies.Count; i++)
-			{
-				oldIndexByCompany.Add(allCompanies[i], i);
-			}
-			allCompanies.Sort();
+			Dictionary<Company, int> oldIndexByCompany =
+				allCompanies
+					.Select((c, i) => new { c, i })
+					.OrderBy(x => x.c.Name)
+					.ToDictionary(x => x.c, x => x.i);
 
 			// assert
-			Assert.AreEqual(lastCompany, allCompanies.Last());
-			Assert.AreEqual(1, oldIndexByCompany[allCompanies.Last()]);
+			Assert.AreEqual(lastCompany, oldIndexByCompany.Last().Key);
+			Assert.AreEqual(1, oldIndexByCompany.Last().Value);
 		}
 	}
 }

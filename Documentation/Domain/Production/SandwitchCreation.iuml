@@ -1,0 +1,84 @@
+@startuml sandwich elements
+
+title sandwitch elementes
+
+interface IIngredient{
+    ExpDate: DateTime
+}
+
+interface IKeyIngredient{
+    Kind: SandwitchKind
+}
+
+
+interface IGarnish {
+    Name: string
+}
+
+interface ITopping {
+    Name: string
+}
+
+class Beef
+class Chicken
+
+class Cheese
+
+IKeyIngredient -u-|> IIngredient
+IGarnish -u-|> IIngredient
+ITopping -u-|> IIngredient
+
+Beef -u-|> IKeyIngredient
+Chicken -u-|> IKeyIngredient
+Cheese -u-|> IKeyIngredient
+
+Cucumber -u-|> IGarnish
+Tomato -u-|> IGarnish
+Olives -u-|> IGarnish
+
+Mayo -u-|> ITopping
+GarlicSose -u-|> ITopping
+Ketchup -u-|> ITopping
+
+@enduml
+
+@startuml sandwitch creation
+
+title sandwitch creation
+
+interface ISandwichSetup {
+    Use(IKeyIngredient): IGarnishable
+}
+
+
+interface IKeyIngredient
+interface IGarnishable {
+    AddGarnish(IGarnish garnish): IGarnishable
+}
+
+interface IGarnish
+interface ITopping
+
+interface ISossing {
+    AddTopping(ITopping topping): ISandwichDispatching
+}
+
+interface ISandwichDispatching{
+    Wrap(): Sandwitch
+}
+
+ISandwichSetup --> IKeyIngredient: uses
+ISandwichSetup --> IGarnishable: drives to
+
+ISossing --> ITopping: uses
+ISossing --> ISandwichDispatching: drives to
+ISossing --|> ISandwichDispatching: allows
+
+
+IGarnishable --|> ISossing: allows
+IGarnishable --> IGarnishable: allows
+IGarnishable --> IGarnish: uses
+
+
+
+@enduml

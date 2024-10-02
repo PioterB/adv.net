@@ -98,7 +98,12 @@ namespace LevelUpCSharp.Production
 
         private Sandwich ProduceSandwich(SandwichKind kind, DateTimeOffset addMinutes)
         {
-            return new Sandwich(kind, addMinutes);
+            var main = kind.ToKeyIngredient();
+            return SandwichBuilder.WithButter(true)
+                .Use(main)
+                .AddVeg(new Onion())
+                .AddTopping(new GarlicSos())
+                .Wrap();
         }
     }
 }

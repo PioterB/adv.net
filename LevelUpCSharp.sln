@@ -11,6 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelUpCSharp.Tools", "Leve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelUpCSharp.Linq.Exercises", "LevelUpCSharp.Linq.Exercises\LevelUpCSharp.Linq.Exercises.csproj", "{9AE6FEE1-7DBD-4581-B1AC-6CDFA4C9692F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{4E1CA6E6-3994-4ACE-8FE9-D73C7A45AADB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{26E42B49-18F9-4C11-ABB9-0A4AC3C4C913}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Production", "Production", "{4C0E3FF8-6B5D-4D78-84E4-2559C4307C40}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\Domain\Production\SandwitchCreation.iuml = Documentation\Domain\Production\SandwitchCreation.iuml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +45,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{26E42B49-18F9-4C11-ABB9-0A4AC3C4C913} = {4E1CA6E6-3994-4ACE-8FE9-D73C7A45AADB}
+		{4C0E3FF8-6B5D-4D78-84E4-2559C4307C40} = {26E42B49-18F9-4C11-ABB9-0A4AC3C4C913}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B933B73-7702-4138-B9C6-D63A7A6E6A22}

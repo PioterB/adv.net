@@ -4,8 +4,8 @@ namespace LevelUpCSharp.Production
 {
 	internal class Onion : IGarnish
 	{
-		public string Name => throw new NotImplementedException();
+		public string Name => "Onion";
 
-		public DateTime ExpDate => throw new NotImplementedException();
+		public DateTime ExpDate => DateTime.Now.AddDays(5);
 	}
 }

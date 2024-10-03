@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using LevelUpCSharp.Collections;
 using LevelUpCSharp.Products;
 
 namespace LevelUpCSharp.Production
@@ -15,15 +16,23 @@ namespace LevelUpCSharp.Production
 
 		private readonly ConcurrentQueue<Sandwich> _warehouse; 
 		private readonly ProductionRequestsQueue _pendingProduction;
+		private readonly IProductionStrategy _productionStrategy;
 
-        public Vendor(string name)
+		public Vendor(string name)
+            : this(name, new MadeByMe())
+        {
+        }
+
+        public Vendor(string name, IProductionStrategy productionStrategy)
         {
             Name = name;
-            _worker = new Thread(Worker) { IsBackground = true };
+			_productionStrategy = productionStrategy;
+			_worker = new Thread(Worker) { IsBackground = true };
             _warehouse = new ConcurrentQueue<Sandwich>();
             _pendingProduction = new ProductionRequestsQueue();
             _worker.Start();
         }
+
 
         public event Action<Sandwich[]> Produced;
 
@@ -75,19 +84,9 @@ namespace LevelUpCSharp.Production
 
         private IEnumerable<Sandwich> Produce(ProdcutionRequest currentOrder)
         {
-            var ordered = new List<Sandwich>((int)currentOrder.Count);
-            for (int i = 0; i < currentOrder.Count; i++)
-            {
-                var sandwitch = SandwichBuilder.WithButter(true)
-                    .Use(currentOrder.Kind.ToKeyIngredient())
-                    .AddVeg(new Onion())
-                    .AddTopping(new GarlicSos())
-                    .Wrap();
-                _warehouse.Enqueue(sandwitch);
-                ordered.Add(sandwitch);
-            }
-
-            return ordered;
+            var ordered = _productionStrategy.Produce(currentOrder);
+            ordered.ForEach(s => _warehouse.Enqueue(s));
+             return ordered;
         }
 
         private void Worker(object obj)

@@ -9,17 +9,19 @@ using LevelUpCSharp.Products;
 
 namespace LevelUpCSharp.Production
 {
-    public class Vendor
+	public class Vendor
     {
         private Thread _worker;
 
 		private readonly ConcurrentQueue<Sandwich> _warehouse; 
+		private readonly ProductionRequestsQueue _pendingProduction;
 
         public Vendor(string name)
         {
             Name = name;
             _worker = new Thread(Worker) { IsBackground = true };
             _warehouse = new ConcurrentQueue<Sandwich>();
+            _pendingProduction = new ProductionRequestsQueue();
             _worker.Start();
         }
 
@@ -49,68 +51,43 @@ namespace LevelUpCSharp.Production
 
         public void Order(SandwichKind kind, int count)
         {
-            var sandwiches = new List<Sandwich>();
-            for (int i = 0; i < count; i++)
-            {
-                var sandwich = Produce(kind);
-                sandwiches.Add(sandwich);
-                _warehouse.Enqueue(sandwich);
-            }
-            
-            Produced?.Invoke(sandwiches.ToArray());
+            // opcja A
+            var safeCount = (uint)Math.Max(0, count);
+
+            //// opcja B
+            //if (count < 0)
+            //    throw new ArgumentException("no kidding");
+
+   //         // opcja C
+   //         if( count < 0)
+			//{
+   //             return;
+			//}
+
+            _pendingProduction.Enqueue(new ProdcutionRequest(kind, safeCount));
         }
 
         public IEnumerable<StockItem> GetStock()
         {
-            //Dictionary<SandwichKind, int> counts = new Dictionary<SandwichKind, int>()
-            //{
-            //    {SandwichKind.Cheese, 0},
-            //    {SandwichKind.Chicken, 0},
-            //    {SandwichKind.Beef, 0},
-            //    {SandwichKind.Pork, 0},
-            //};
-
-
-            //foreach (var sandwich in _warehouse)
-            //{
-            //	counts[sandwich.Kind] += 1;
-            //} 
-
-            //         var result = new StockItem[counts.Count];
-
-            //         int i = 0;
-            //         foreach (var count in counts)
-            //         {
-            //             result[i] = new StockItem(count.Key, count.Value);
-            //             i++;
-            //         }
-
             var result = _warehouse.GroupBy(s => s.Kind, (kind, sandwitches) => new StockItem(kind, sandwitches.Count()));
-
-
             return result;
         }
 
-        private Sandwich Produce(SandwichKind kind)
+        private IEnumerable<Sandwich> Produce(ProdcutionRequest currentOrder)
         {
-            return kind switch
+            var ordered = new List<Sandwich>((int)currentOrder.Count);
+            for (int i = 0; i < currentOrder.Count; i++)
             {
-                SandwichKind.Beef => ProduceSandwich(kind, DateTimeOffset.Now.AddMinutes(3)),
-                SandwichKind.Cheese => ProduceSandwich(kind, DateTimeOffset.Now.AddSeconds(90)),
-                SandwichKind.Chicken => ProduceSandwich(kind, DateTimeOffset.Now.AddMinutes(4)),
-                SandwichKind.Pork => ProduceSandwich(kind, DateTimeOffset.Now.AddSeconds(150)),
-                _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
-            };
-        }
+                var sandwitch = SandwichBuilder.WithButter(true)
+                    .Use(currentOrder.Kind.ToKeyIngredient())
+                    .AddVeg(new Onion())
+                    .AddTopping(new GarlicSos())
+                    .Wrap();
+                _warehouse.Enqueue(sandwitch);
+                ordered.Add(sandwitch);
+            }
 
-        private Sandwich ProduceSandwich(SandwichKind kind, DateTimeOffset addMinutes)
-        {
-            var main = kind.ToKeyIngredient();
-            return SandwichBuilder.WithButter(true)
-                .Use(main)
-                .AddVeg(new Onion())
-                .AddTopping(new GarlicSos())
-                .Wrap();
+            return ordered;
         }
 
         private void Worker(object obj)
@@ -119,15 +96,13 @@ namespace LevelUpCSharp.Production
 
             while(true)
 			{
-                var kind = (SandwichKind)r.Next(1, 4);
-
-                var sandwitch = Produce(kind);
-                _warehouse.Enqueue(sandwitch);
-                Produced?.Invoke(new[] { sandwitch });
-
-                var delay = r.Next(500, 3000);
-                Thread.Sleep(TimeSpan.FromMilliseconds(delay));
+                var currentOrder = _pendingProduction.Dequeue();
+                var ordered = Produce(currentOrder);
+                
+                Produced?.Invoke(ordered.ToArray());
+                
+                Thread.Sleep(TimeSpan.FromMilliseconds(r.Next(500, 3000)));
 			}
-        }
+		}
     }
 }

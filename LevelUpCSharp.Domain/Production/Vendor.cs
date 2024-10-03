@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,13 +13,13 @@ namespace LevelUpCSharp.Production
     {
         private Thread _worker;
 
-		private readonly List<Sandwich> _warehouse; 
+		private readonly ConcurrentQueue<Sandwich> _warehouse; 
 
         public Vendor(string name)
         {
             Name = name;
             _worker = new Thread(Worker) { IsBackground = true };
-            _warehouse = new List<Sandwich>();
+            _warehouse = new ConcurrentQueue<Sandwich>();
             _worker.Start();
         }
 
@@ -31,25 +32,17 @@ namespace LevelUpCSharp.Production
             var toSell = new List<Sandwich>();
             lock (_warehouse)
 			{
-				if (_warehouse.Count == 0)
-				{
-					return Array.Empty<Sandwich>();
-				}
-
-				if (howMuch == 0 || _warehouse.Count <= howMuch)
-				{
-					var result = _warehouse.ToArray();
-					_warehouse.Clear();
-					return result;
-				}
-
 				for (int i = 0; i < howMuch; i++)
 				{
-					var first = _warehouse[0];
-					toSell.Add(first);
-					_warehouse.Remove(first);
-				} 
-			}
+					var success = _warehouse.TryDequeue(out var sandwitch);
+                    if (!success)
+                    {
+                        return toSell;
+                    }
+
+                    toSell.Add(sandwitch);
+                }
+            }
 
             return toSell;
         }
@@ -59,43 +52,41 @@ namespace LevelUpCSharp.Production
             var sandwiches = new List<Sandwich>();
             for (int i = 0; i < count; i++)
             {
-                sandwiches.Add(Produce(kind));
+                var sandwich = Produce(kind);
+                sandwiches.Add(sandwich);
+                _warehouse.Enqueue(sandwich);
             }
-
-			lock (_warehouse)
-			{
-				_warehouse.AddRange(sandwiches);
-			}            
             
             Produced?.Invoke(sandwiches.ToArray());
         }
 
         public IEnumerable<StockItem> GetStock()
         {
-            Dictionary<SandwichKind, int> counts = new Dictionary<SandwichKind, int>()
-            {
-                {SandwichKind.Cheese, 0},
-                {SandwichKind.Chicken, 0},
-                {SandwichKind.Beef, 0},
-                {SandwichKind.Pork, 0},
-            };
+            //Dictionary<SandwichKind, int> counts = new Dictionary<SandwichKind, int>()
+            //{
+            //    {SandwichKind.Cheese, 0},
+            //    {SandwichKind.Chicken, 0},
+            //    {SandwichKind.Beef, 0},
+            //    {SandwichKind.Pork, 0},
+            //};
 
-			lock (_warehouse)
-			{
-				foreach (var sandwich in _warehouse)
-				{
-					counts[sandwich.Kind] += 1;
-				} 
-			}
 
-            var result = new StockItem[counts.Count];
+            //foreach (var sandwich in _warehouse)
+            //{
+            //	counts[sandwich.Kind] += 1;
+            //} 
 
-            int i = 0;
-            foreach (var count in counts)
-            {
-                result[i] = new StockItem(count.Key, count.Value);
-                i++;
-            }
+            //         var result = new StockItem[counts.Count];
+
+            //         int i = 0;
+            //         foreach (var count in counts)
+            //         {
+            //             result[i] = new StockItem(count.Key, count.Value);
+            //             i++;
+            //         }
+
+            var result = _warehouse.GroupBy(s => s.Kind, (kind, sandwitches) => new StockItem(kind, sandwitches.Count()));
+
 
             return result;
         }
@@ -131,11 +122,7 @@ namespace LevelUpCSharp.Production
                 var kind = (SandwichKind)r.Next(1, 4);
 
                 var sandwitch = Produce(kind);
-				lock (_warehouse)
-				{
-					_warehouse.Add(sandwitch);
-				}
-
+                _warehouse.Enqueue(sandwitch);
                 Produced?.Invoke(new[] { sandwitch });
 
                 var delay = r.Next(500, 3000);

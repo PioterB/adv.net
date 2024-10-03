@@ -57,7 +57,7 @@ namespace LevelUpCSharp.Production
 
         private void OnDistribution()
         {
-            var sandwiches = _vendor.Buy();
+            var sandwiches = _vendor.Buy(5);
 
             Stock = BuildStock(_vendor.GetStock());
             RaisePropertyChanged(nameof(Stock));

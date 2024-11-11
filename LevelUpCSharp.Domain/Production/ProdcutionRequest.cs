@@ -3,7 +3,7 @@ using System;
 
 namespace LevelUpCSharp.Production
 {
-	internal class ProdcutionRequest
+	public class ProdcutionRequest
 	{
 		private static Lazy<ProdcutionRequest> _empty = new Lazy<ProdcutionRequest>(() => new ProdcutionRequest(SandwichKind.Pork, 0));
 

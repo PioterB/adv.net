@@ -12,7 +12,7 @@ namespace LevelUpCSharp.Production
                 return Result<Vendor>.Failed();
             }
 
-            var vendor = new Vendor(name);
+            var vendor = new Vendor(name, new Outsource());
 
             Repositories.Vendors.Add(vendor.Name, vendor);
 

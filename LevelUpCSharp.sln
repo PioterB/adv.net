@@ -22,6 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Production", "Production", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelUpCSharp.Concurrency", "LevelUpCSharp.Concurrency\LevelUpCSharp.Concurrency.csproj", "{EE438B2A-5DC1-4D2E-9CB0-C719F3084F79}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelUpCSharp.Server", "LevelUpCSharp.Server\LevelUpCSharp.Server.csproj", "{1A4E2285-0560-4E08-A102-16A6E59C630D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelUpCSharp.Production", "LevelUpCSharp.Production\LevelUpCSharp.Production.csproj", "{AAF3FC12-FDDC-44DE-89F4-C0F95015183A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +52,14 @@ Global
 		{EE438B2A-5DC1-4D2E-9CB0-C719F3084F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE438B2A-5DC1-4D2E-9CB0-C719F3084F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE438B2A-5DC1-4D2E-9CB0-C719F3084F79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A4E2285-0560-4E08-A102-16A6E59C630D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A4E2285-0560-4E08-A102-16A6E59C630D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A4E2285-0560-4E08-A102-16A6E59C630D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A4E2285-0560-4E08-A102-16A6E59C630D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAF3FC12-FDDC-44DE-89F4-C0F95015183A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAF3FC12-FDDC-44DE-89F4-C0F95015183A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAF3FC12-FDDC-44DE-89F4-C0F95015183A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAF3FC12-FDDC-44DE-89F4-C0F95015183A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

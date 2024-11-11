@@ -64,7 +64,8 @@ namespace LevelUpCSharp.Server
         #region networking
         private static TcpListener BuildServer()
         {
-            throw new NotImplementedException();
+            var server = new TcpListener(IPAddress.Any, 13000);
+            return server;
         }
 
         private static void ProcessRequest(TcpClient client)
@@ -82,11 +83,16 @@ namespace LevelUpCSharp.Server
 
                 Console.WriteLine("Responsed");
             }
-
         }
+
         private static string ReadCommand(NetworkStream stream)
         {
-            throw new NotImplementedException();
+            Byte[] bytes = new Byte[256];
+            string data;
+            var i = stream.Read(bytes, 0, bytes.Length);
+            // Translate data bytes to a ASCII string.
+            data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+            return data;
         }
 
         public static void SendResponse<TValue>(TValue value, Stream s)
@@ -101,7 +107,6 @@ namespace LevelUpCSharp.Server
                 }
             }
         }
-
         #endregion
         
         #region reflection

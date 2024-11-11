@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LevelUpCSharp.Production
 {
-	internal interface IProductionStrategy
+    public interface IProductionStrategy
 	{
 		IEnumerable<Sandwich> Produce(ProdcutionRequest currentOrder);
 	}

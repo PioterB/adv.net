@@ -70,45 +70,5 @@
                 </GroupBox>
             </DockPanel>
         </GroupBox>
-        
-        <!-- produkcja -->
-        <GroupBox Grid.Column="02" Header="Produkcja" DataContext="{Binding Production}">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <ListView ItemsSource="{Binding Vendors}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <DockPanel>
-                                    <TextBlock Text="{Binding Name}"
-                                               DockPanel.Dock="Left"/>
-                                    <Button Content="Produce"
-                                            Padding="3,1"
-                                            Command="{Binding Produce}"
-                                            DockPanel.Dock="Right"/>
-                                    <Button Content="Distribute"
-                                            Padding="3,1"
-                                            Command="{Binding Distribute}"
-                                            DockPanel.Dock="Right"/>
-                                </DockPanel>
-                                <Expander Header="Magazyn" ExpandDirection="Down" MaxHeight="200" IsExpanded="True">
-                                    <ScrollViewer>
-                                        <ListView ItemsSource="{Binding Stock}">
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Type}" Margin="2,1"></TextBlock>
-                                                        <TextBlock Text="{Binding Count}" Margin="2,1"></TextBlock>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
-                                        </ListView>
-                                    </ScrollViewer>
-                                </Expander>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
-        </GroupBox>
     </Grid>
 </Window>

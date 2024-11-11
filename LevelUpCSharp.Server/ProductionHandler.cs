@@ -21,7 +21,7 @@ namespace LevelUpCSharp.Server
         [Worker("s")]
         public IEnumerable<Sandwich> Sandwiches()
         {
-            return _vendors.SelectMany(v => v.Buy()).ToArray();
+            return _vendors.SelectMany(v => v.Buy(5)).ToArray();
         }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using LevelUpCSharp.Networking;
 using LevelUpCSharp.Production;
@@ -17,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace LevelUpCSharp.Server
 {
-    class Program
+	class Program
     {
         private static readonly IEnumerable<Vendor> _vendors = new[]
             {new Vendor("Slimak")};
@@ -28,6 +25,8 @@ namespace LevelUpCSharp.Server
         {
             var server = BuildServer();
 
+            _handlers = ScanForHandlers(Assembly.GetExecutingAssembly());
+
             // Start listening for client requests.
             server.Start();
 
@@ -37,6 +36,12 @@ namespace LevelUpCSharp.Server
 
             Console.ReadKey(true);
             Console.WriteLine("Killing server...");
+        }
+
+        private static TcpListener BuildServer()
+        {
+            var server = new TcpListener(IPAddress.Any, 13000);
+            return server;
         }
 
         private static void Listen(TcpListener server)
@@ -56,18 +61,6 @@ namespace LevelUpCSharp.Server
             }
         }
 
-        private static Sandwich[] GetSandwiches()
-        {
-            return new ProductionHandler(_vendors).Sandwiches().ToArray();
-        }
-
-        #region networking
-        private static TcpListener BuildServer()
-        {
-            var server = new TcpListener(IPAddress.Any, 13000);
-            return server;
-        }
-
         private static void ProcessRequest(TcpClient client)
         {
             using (NetworkStream stream = client.GetStream())
@@ -77,8 +70,10 @@ namespace LevelUpCSharp.Server
 
                 Console.WriteLine("Received: {0}", cmd);
 
-                var sandwiches = GetSandwiches();
-                
+				var action = Parse(cmd);
+
+                var sandwiches = Execute(action);
+                                
                 SendResponse(sandwiches, stream);
 
                 Console.WriteLine("Responsed");
@@ -95,6 +90,19 @@ namespace LevelUpCSharp.Server
             return data;
         }
 
+        private static AskedAction Parse(string cmd)
+        {
+            return new AskedAction("p", "s");
+        }
+
+        private static IEnumerable<Sandwich> Execute(AskedAction request)
+        {
+            var maker = Locate(request);
+            var instance = ConstructHandler(maker.Group);
+            var sandwiches = InvokeWorker(maker, instance);
+            return sandwiches;
+        }
+
         public static void SendResponse<TValue>(TValue value, Stream s)
         {
             using (StreamWriter writer = new StreamWriter(s))
@@ -107,16 +115,22 @@ namespace LevelUpCSharp.Server
                 }
             }
         }
-        #endregion
-        
-        #region reflection
 
-        private static object InvokeWorker(Route handler, string method, object instance)
+        private static SandwichesMaker Locate(AskedAction action)
+		{
+            var route = _handlers[action.Group];
+            var group = route.Type;
+            var method = route.Methods[action.Worker];
+            return new SandwichesMaker(group, method);
+		}
+
+        #region reflection
+        private static object ConstructHandler(Type handler)
         {
             throw new NotImplementedException();
         }
 
-        private static object ConstructHandler(Route handler)
+        private static IEnumerable<Sandwich> InvokeWorker(SandwichesMaker maker, object instance)
         {
             throw new NotImplementedException();
         }
@@ -124,7 +138,6 @@ namespace LevelUpCSharp.Server
         private static IDictionary<string, Route> ScanForHandlers(Assembly assembly)
         {
             var ctrlType = typeof(CtrlAttribute);
-
 
             return Reflector.FindByAttributes(assembly, ctrlType)
                 .ToDictionary(
@@ -141,7 +154,6 @@ namespace LevelUpCSharp.Server
                     m => m.Name);
             return new Route(ctrl, methods);
         }
-
         #endregion
     }
 }

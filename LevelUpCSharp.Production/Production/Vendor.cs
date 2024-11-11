@@ -60,18 +60,7 @@ namespace LevelUpCSharp.Production
 
         public void Order(SandwichKind kind, int count)
         {
-            // opcja A
             var safeCount = (uint)Math.Max(0, count);
-
-            //// opcja B
-            //if (count < 0)
-            //    throw new ArgumentException("no kidding");
-
-   //         // opcja C
-   //         if( count < 0)
-			//{
-   //             return;
-			//}
 
             _pendingProduction.Enqueue(new ProdcutionRequest(kind, safeCount));
         }
@@ -96,6 +85,7 @@ namespace LevelUpCSharp.Production
             while(true)
 			{
                 var currentOrder = _pendingProduction.Dequeue();
+                currentOrder = currentOrder.Count == 0 ? new ProdcutionRequest(SandwichKind.Beef, 1) : currentOrder;
                 var ordered = Produce(currentOrder);
                 
                 Produced?.Invoke(ordered.ToArray());

@@ -53,6 +53,7 @@
         <!-- sprzedaż -->
         <GroupBox Grid.Column="1" Header="Sprzedaż" DataContext="{Binding Retail}">
             <DockPanel>
+                <Button Content="Pozyskaj" DockPanel.Dock="Top" Command="{Binding Pickup}"/>
                 <TextBlock DockPanel.Dock="Top">Podsumowanie</TextBlock>
                 <ListView ItemsSource="{Binding Lines}" 
                           DockPanel.Dock="Top">

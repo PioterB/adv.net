@@ -92,7 +92,8 @@ namespace LevelUpCSharp.Server
 
         private static AskedAction Parse(string cmd)
         {
-            return new AskedAction("p", "s");
+            var parts = cmd.Split('.');
+            return new AskedAction(parts[0], parts[1]);
         }
 
         private static IEnumerable<Sandwich> Execute(AskedAction request)

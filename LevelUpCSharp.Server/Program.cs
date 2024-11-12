@@ -127,12 +127,12 @@ namespace LevelUpCSharp.Server
         #region reflection
         private static object ConstructHandler(Type handler)
         {
-            throw new NotImplementedException();
+            return Activator.CreateInstance(handler, _vendors);
         }
 
         private static IEnumerable<Sandwich> InvokeWorker(SandwichesMaker maker, object instance)
         {
-            throw new NotImplementedException();
+            return (IEnumerable<Sandwich>)maker.Group.GetMethod(maker.Method).Invoke(instance, null);
         }
 
         private static IDictionary<string, Route> ScanForHandlers(Assembly assembly)

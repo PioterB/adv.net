@@ -10,9 +10,9 @@ namespace LevelUpCSharp
             Consumers = InitializeCustomers();
         }
 
-        public static Repository<string, Consumer> Consumers { get; }
+        public static IRepository<string, Consumer> Consumers { get; }
 
-        private static Repository<string, Consumer> InitializeCustomers()
+        private static IRepository<string, Consumer> InitializeCustomers()
         {
             var repo = new Repository<string, Consumer>();
 

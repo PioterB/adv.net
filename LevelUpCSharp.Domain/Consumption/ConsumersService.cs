@@ -2,6 +2,18 @@
 {
     public class ConsumersService
     {
+		private readonly IRepository<string, Consumer> _consumers;
+
+		public ConsumersService(IRepository<string, Consumer> consumers)
+        {
+            /* 
+             * sanity check guarding architecture is missing 
+             * - consumetrs is not null
+             */
+
+			_consumers = consumers;
+		}
+
         public Result<Consumer> Create(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -11,7 +23,7 @@
 
             var consumer = new Consumer(name);
 
-            Repositories.Consumers.Add(consumer.Name, consumer);
+            _consumers.Add(consumer.Name, consumer);
             
             return Result<Consumer>.Success(consumer);
         }

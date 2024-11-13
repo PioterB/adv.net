@@ -1,5 +1,4 @@
 ﻿using LevelUpCSharp.Consumption;
-using LevelUpCSharp.Persistence;
 
 namespace LevelUpCSharp
 {

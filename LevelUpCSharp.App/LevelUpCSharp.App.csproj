@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LevelUpCSharp.Domain\LevelUpCSharp.Domain.csproj" />
+    <ProjectReference Include="..\LevelUpCSharp.Persistence\LevelUpCSharp.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

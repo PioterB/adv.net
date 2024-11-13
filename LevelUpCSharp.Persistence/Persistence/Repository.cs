@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace LevelUpCSharp.Persistence
 {
-    public class Repository<TKey, TItem> 
+    public class Repository<TKey, TItem> : IRepository<TKey, TItem>
     {
         private IDictionary<TKey, TItem> _store = new Dictionary<TKey, TItem>();
 

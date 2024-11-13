@@ -5,4 +5,8 @@
     <RootNamespace>LevelUpCSharp</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LevelUpCSharp.Domain\LevelUpCSharp.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

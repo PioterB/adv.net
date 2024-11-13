@@ -24,7 +24,6 @@ namespace LevelUpCSharp.Consumption
             
             Add = new RelayCommand<string>(NewConsumer);
         }
-
         public ICommand Add { get; }
 
         public ObservableCollection<ConsumerViewModel> Consumers => _consumers;

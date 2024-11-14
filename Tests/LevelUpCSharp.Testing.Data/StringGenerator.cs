@@ -15,6 +15,16 @@ namespace LevelUpCSharp.Testing.Data
             return (string)null;
         }
 
+        public string Empty()
+        {
+            return string.Empty;
+        }
+
+        public string Blank()
+        {
+            return "   ";
+        }
+
         public string Create(uint length = 1) 
         {
             string result = string.Empty;

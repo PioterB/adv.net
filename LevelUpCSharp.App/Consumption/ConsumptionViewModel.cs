@@ -8,10 +8,10 @@ namespace LevelUpCSharp.Consumption
 {
     internal class ConsumptionViewModel
     {
-        private readonly ConsumersService _consumersService;
+        private readonly IConsumersService _consumersService;
 		private readonly ObservableCollection<ConsumerViewModel> _consumers;
 
-        public ConsumptionViewModel(ConsumersService consumersService, IRepository<string, Consumer> consumers)
+        public ConsumptionViewModel(IConsumersService consumersService, IRepository<string, Consumer> consumers)
         {
             /* 
              * sanity check guarding architecture is missing 

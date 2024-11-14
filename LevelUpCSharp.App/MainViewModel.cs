@@ -16,7 +16,7 @@ namespace LevelUpCSharp
             consumers.Add("Zbyszek", new Consumer("Zbyszek"));
             consumers.Add("Waldek", new Consumer("Waldek"));
 
-            Consumption = new ConsumptionViewModel(new ConsumersService(consumers), consumers);
+            Consumption = new ConsumptionViewModel(new PersostemceDecorator(new ConsumersService(), consumers), consumers);
             Retail = new RetailViewModel();
         }
 

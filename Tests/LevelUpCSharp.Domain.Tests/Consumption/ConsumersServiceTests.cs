@@ -8,13 +8,14 @@ namespace LevelUpCSharp.Domain.Tests.Consumption
 {
     public class ConsumersServiceTests
 	{
+		private IRepository<string, Consumer> _customers;
 		private ConsumersService _unitUnderTest;
 
         [SetUp]
         public void Setup()
         {
-			IRepository<string, Consumer> customers = Substitute.For<IRepository<string, Consumer>>();
-			_unitUnderTest = new ConsumersService(customers);
+			_customers = Substitute.For<IRepository<string, Consumer>>();
+			_unitUnderTest = new ConsumersService(_customers);
         }
 
         [Test]
@@ -23,6 +24,16 @@ namespace LevelUpCSharp.Domain.Tests.Consumption
             TestDelegate action = () => new ConsumersService(Substitute.For<IRepository<string, Consumer>>());
 
             Assert.DoesNotThrow(action);
+        }
+
+        [Test]
+        public void Create_Any_WasPersisted()
+        {
+            var any = StringGenerator.Instance.Create();
+            
+            _unitUnderTest.Create(any);
+
+            _customers.Received(1).Add(any, Arg.Is<Consumer>(x => x != null));
         }
 
         private static object[] InvalildCustomerNames =

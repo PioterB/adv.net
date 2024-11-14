@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8F1023F6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelUpCSharp.Domain.Tests", "Tests\LevelUpCSharp.Domain.Tests\LevelUpCSharp.Domain.Tests.csproj", "{D7CD5F09-3B1A-4BCE-8472-557C84311A2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelUpCSharp.Testing.Data", "Tests\LevelUpCSharp.Testing.Data\LevelUpCSharp.Testing.Data.csproj", "{807DFA2B-D513-4DA7-ADD1-7849209BA3FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{D7CD5F09-3B1A-4BCE-8472-557C84311A2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7CD5F09-3B1A-4BCE-8472-557C84311A2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7CD5F09-3B1A-4BCE-8472-557C84311A2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{807DFA2B-D513-4DA7-ADD1-7849209BA3FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{807DFA2B-D513-4DA7-ADD1-7849209BA3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{807DFA2B-D513-4DA7-ADD1-7849209BA3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{807DFA2B-D513-4DA7-ADD1-7849209BA3FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{26E42B49-18F9-4C11-ABB9-0A4AC3C4C913} = {4E1CA6E6-3994-4ACE-8FE9-D73C7A45AADB}
 		{4C0E3FF8-6B5D-4D78-84E4-2559C4307C40} = {26E42B49-18F9-4C11-ABB9-0A4AC3C4C913}
 		{D7CD5F09-3B1A-4BCE-8472-557C84311A2D} = {8F1023F6-01BE-427A-A175-405B2647AD96}
+		{807DFA2B-D513-4DA7-ADD1-7849209BA3FE} = {8F1023F6-01BE-427A-A175-405B2647AD96}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B933B73-7702-4138-B9C6-D63A7A6E6A22}

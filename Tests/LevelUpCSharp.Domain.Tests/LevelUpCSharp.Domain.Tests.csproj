@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\LevelUpCSharp.Domain\LevelUpCSharp.Domain.csproj" />
+    <ProjectReference Include="..\LevelUpCSharp.Testing.Data\LevelUpCSharp.Testing.Data.csproj" />
   </ItemGroup>
 
 </Project>

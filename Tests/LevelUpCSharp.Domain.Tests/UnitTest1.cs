@@ -1,3 +1,4 @@
+using LevelUpCSharp.Testing.Data;
 using NUnit.Framework;
 
 namespace LevelUpCSharp.Domain.Tests

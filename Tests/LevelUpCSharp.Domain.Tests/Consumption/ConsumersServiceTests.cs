@@ -1,7 +1,8 @@
 using LevelUpCSharp.Consumption;
 using LevelUpCSharp.Testing.Data;
+using NSubstitute;
 using NUnit.Framework;
-using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 
 namespace LevelUpCSharp.Domain.Tests.Consumption
 {
@@ -12,44 +13,46 @@ namespace LevelUpCSharp.Domain.Tests.Consumption
         [SetUp]
         public void Setup()
         {
-			IRepository<string, Consumer> customers = null;
+			IRepository<string, Consumer> customers = Substitute.For<IRepository<string, Consumer>>();
 			_unitUnderTest = new ConsumersService(customers);
         }
 
         [Test]
-        public void Create_MissingName_Failed()
+        public void Ctor_AlwaysCreates()
         {
-            var invalidName = StringGenerator.Instance.Nothing();
+            TestDelegate action = () => new ConsumersService(Substitute.For<IRepository<string, Consumer>>());
 
-            var failure = _unitUnderTest.Create(invalidName);
+            Assert.DoesNotThrow(action);
+        }
+
+        private static object[] InvalildCustomerNames =
+        {
+            new object[]{ StringGenerator.Instance.Empty() },
+            new object[]{ StringGenerator.Instance.Nothing() },
+        };
+
+        [Test]
+        [TestCaseSource(nameof(InvalildCustomerNames))]
+        public void Create_InvalidName_Failed(string name)
+        {
+            var failure = _unitUnderTest.Create(name);
 
             Assert.IsTrue(failure.Fail);
         }
 
-        [Test]
-        public void Create_EmptyName_Failed()
+        private static object[] ValildCustomerNames =
         {
-            var invalidName = StringGenerator.Instance.Empty();
-
-            var failure = _unitUnderTest.Create(invalidName);
-
-            Assert.IsTrue(failure.Fail);
-        }
+            new object[]{ StringGenerator.Instance.Create(3) },
+            new object[]{ StringGenerator.Instance.Blank() },
+        };
 
         [Test]
-        public void Create_BlankName_Success()
+        [TestCaseSource(nameof(ValildCustomerNames))]
+        public void Create_ValidName_Success(string name)
         {
-            var invalidName = StringGenerator.Instance.Blank();
+            var failure = _unitUnderTest.Create(name);
 
-            var success = _unitUnderTest.Create(invalidName);
-
-            Assert.IsFalse(success.Fail);
-        }
-
-        [Test]
-        public void Create_ValidName_Success()
-        {
-            Assert.Fail();
+            Assert.IsFalse(failure.Fail);
         }
     }
 }
